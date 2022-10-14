@@ -3,25 +3,48 @@ export interface FetchOptions {
     sortOptions?: SortOptions;
     filterOptions?: FilterOptions[];
 }
-type SortOptions = {
+export type SortOptions = {
     sortBy: string;
     sortOrder: string
 }
 
-type FilterOptions = {
+export type FilterOptions = {
     filterBy: string,
     filterParam: string
 }
+
+const BASE_URL = 'http://localhost:9000/'
 
 export const reactiveFetchJobs = async (page = 0, fetchOptions: FetchOptions = {
     itemsPerPage: 10,
     sortOptions: {
         sortBy: 'id',
         sortOrder: 'asc'
-    }
+    }, filterOptions: [{
+        filterBy: 'q',
+        filterParam: ''
+    }]
 }) => {
-    console.log("hi")
-    return fetch(`http://localhost:9000/jobs?_page=${page}&_limit=${fetchOptions.itemsPerPage}&_sort=${fetchOptions.sortOptions?.sortBy}&_order=${fetchOptions.sortOptions?.sortOrder}&${fetchOptions?.filterOptions?.map(option => option.filterBy + '=' + option.filterParam)}`
+
+    let URL = ''
+    const PAGINATED_URL = `${BASE_URL}jobs?_page=${page}&_limit=${fetchOptions.itemsPerPage}`
+
+    if (fetchOptions.sortOptions) {
+        URL = `${URL}${PAGINATED_URL}&_sort=${fetchOptions.sortOptions.sortBy}&_order=${fetchOptions.sortOptions.sortOrder}`
+    }
+
+    if (fetchOptions.filterOptions?.length) {
+        fetchOptions.filterOptions.forEach((option) => {
+            if (option.filterParam) {
+                URL += `&${option.filterBy}${option.filterBy === 'q' ? '=' : '_like=^'}${option.filterParam}`
+            }
+
+        })
+
+    }
+    console.log(URL)
+
+    return fetch(`${URL}`
         , {
             headers: {
                 'Content-Type': 'application/json',

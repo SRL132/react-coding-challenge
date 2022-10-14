@@ -29,7 +29,6 @@ type skill = {
     category: string;
 }
 
-
 const jobConfig: EntityConfig = {
     fields:
     {
@@ -37,6 +36,7 @@ const jobConfig: EntityConfig = {
             name: 'id',
             type: 'integer',
             label: 'ID',
+            searcheable: true,
             unique: true
         },
         originalId: {
@@ -74,7 +74,7 @@ const jobConfig: EntityConfig = {
         officeCity: {
             name: 'officeCity',
             type: 'text',
-            label: 'Office city'
+            label: 'Office city',
         },
         officePostalCode: {
             name: 'officePostalCode',
@@ -138,7 +138,9 @@ const jobConfig: EntityConfig = {
         },
     },
     fetch: reactiveFetchJobs,
-    fetchAll: fetchAllJobs
+    fetchAll: fetchAllJobs,
+    infiniteQueryName: 'infiniteJobData',
+    normalQueryName: 'allJobData'
 }
 
 export default jobConfig

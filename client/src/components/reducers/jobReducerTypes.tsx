@@ -1,0 +1,2 @@
+export const UPDATE_SORTING = 'UPDATE_SORTING'
+export const UPDATE_FILTERS = 'UPDATE_FILTERS'
