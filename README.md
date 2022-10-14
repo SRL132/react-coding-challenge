@@ -11,8 +11,8 @@ To easily create a new dashboard with stats and filters all you have to do is th
 
 ## How to start
 
-1-Install Dependencies with yarn install\
-2-Start JSON Server with serve-json in the client folder\
+1-Enter the client folder and install Dependencies with yarn install\
+2-Start JSON Server with serve-json in the client folder. If the default port is busy, adapt the script in package.json to your needs\
 3-Start React App with yarn start in the client folder
 
 ## Tech Stack
