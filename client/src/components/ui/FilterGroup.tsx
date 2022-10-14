@@ -1,21 +1,20 @@
 import React, { ChangeEvent, Context, useContext, useState } from 'react'
 import { JobContextType } from '../context/jobContext'
-import { UPDATE_FILTERS } from '../reducers/jobReducerTypes'
-import { FilterOptions } from '../../api/jobs-api'
-import { FieldConfig } from '../config/main/schema'
+import { FieldConfig, filterOptions } from '../config/main/schema'
 
 type FilterProps = {
     fields: Record<string, FieldConfig>
     context: Context<JobContextType>
+    updateFilters: string
 }
 
-export default function FilterGroup({ fields, context }: FilterProps) {
+export default function FilterGroup({ fields, context, updateFilters }: FilterProps) {
     const [searchBy, setSearchBy] = useState('q')
     //@ts-ignore
     const [state, dispatch] = useContext(context)
 
     const getFilterOptions = (optionKey: string, optionValue: string) => {
-        const index = state.filterOptions.findIndex((el: FilterOptions) => el.filterBy === searchBy)
+        const index = state.filterOptions.findIndex((el: filterOptions) => el.filterBy === searchBy)
         let newFilterOptions = state.filterOptions
         newFilterOptions[index][optionKey] = optionValue
         return newFilterOptions
@@ -23,20 +22,20 @@ export default function FilterGroup({ fields, context }: FilterProps) {
 
     const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked === true) {
-            dispatch({ type: UPDATE_FILTERS, payload: [...state.filterOptions, { filterBy: event.target.name, filterParam: 'true' }] })
+            dispatch({ type: updateFilters, payload: [...state.filterOptions, { filterBy: event.target.name, filterParam: 'true' }] })
         } else {
-            dispatch({ type: UPDATE_FILTERS, payload: state.filterOptions.filter((options: FilterOptions) => options?.filterBy !== event.target.name) })
+            dispatch({ type: updateFilters, payload: state.filterOptions.filter((options: filterOptions) => options?.filterBy !== event.target.name) })
         }
     }
 
     const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
         const newFilterOptions = getFilterOptions('filterParam', event.target.value)
-        dispatch({ type: UPDATE_FILTERS, payload: newFilterOptions })
+        dispatch({ type: updateFilters, payload: newFilterOptions })
     }
 
     const onSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
         const newFilterOptions = getFilterOptions('filterBy', event.target.value)
-        dispatch({ type: UPDATE_FILTERS, payload: newFilterOptions })
+        dispatch({ type: updateFilters, payload: newFilterOptions })
         setSearchBy(event.target.value)
     }
 

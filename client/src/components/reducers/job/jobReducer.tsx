@@ -1,4 +1,4 @@
-import { FetchOptions } from "../../api/jobs-api"
+import { FetchOptions } from "../../../api/jobs-api"
 import { UPDATE_SORTING, UPDATE_FILTERS } from "./jobReducerTypes"
 
 export const initialState: FetchOptions = {

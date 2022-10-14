@@ -1,16 +1,15 @@
 import React, { Context, useContext } from 'react'
 import { useInfiniteQuery } from 'react-query'
 import InfiniteScroll from 'react-infinite-scroller';
-import { UPDATE_SORTING } from '../reducers/jobReducerTypes'
-import { JobContextType } from '../context/jobContext'
-import { EntityConfig, FieldConfig } from '../config/main/schema';
+import { ContextType, EntityConfig, FieldConfig } from '../config/main/schema';
 
 type TableProps = {
     entityConfig: EntityConfig
-    context: Context<JobContextType>
+    context: Context<ContextType>
+    updateSorting: string
 }
 
-export default function Table({ entityConfig, context }: TableProps) {
+export default function Table({ entityConfig, context, updateSorting }: TableProps) {
     //@ts-ignore
     const [state, dispatch] = useContext(context)
     const fields = entityConfig.fields
@@ -27,10 +26,10 @@ export default function Table({ entityConfig, context }: TableProps) {
 
     const sortData = (newSortOptions: { sortBy: string; }) => {
         if (state.sortOptions.sortBy !== newSortOptions.sortBy) {
-            dispatch({ type: UPDATE_SORTING, payload: { sortBy: newSortOptions.sortBy, sortOrder: 'asc' } })
+            dispatch({ type: updateSorting, payload: { sortBy: newSortOptions.sortBy, sortOrder: 'asc' } })
         } else {
             const newSortOrder = state.sortOptions.sortOrder === 'asc' || state.sortOptions.sortOrder === undefined ? 'desc' : 'asc'
-            dispatch({ type: UPDATE_SORTING, payload: { sortBy: newSortOptions.sortBy, sortOrder: newSortOrder } })
+            dispatch({ type: updateSorting, payload: { sortBy: newSortOptions.sortBy, sortOrder: newSortOrder } })
         }
     }
 
@@ -64,12 +63,11 @@ export default function Table({ entityConfig, context }: TableProps) {
                     <tbody>
                         {
                             isSuccess && data.pages.map((page) => {
-                                return (page as Array<FieldConfig>).map((e) => {
+                                return (page as Array<Record<string, any>>).map((e) => {
                                     return <tr>
                                         {Object.keys(fields).map(fieldString => {
                                             switch (fields[fieldString].type) {
                                                 case ('keyValueArray'):
-                                                    //@ts-ignore
                                                     return <td>{e[fieldString].map((field: FieldConfig) =>
                                                         <div>
                                                             <span className='m-2'>
@@ -78,9 +76,8 @@ export default function Table({ entityConfig, context }: TableProps) {
                                                         </div>)}
                                                     </td>
                                                 case ('boolean'):
-                                                    //@ts-ignore
                                                     return <td>{(e[fieldString] as boolean) ? 'true' : 'false'}</td>
-                                                default: //@ts-ignore
+                                                default:
                                                     return <td>{e[fieldString] || ''}</td>
                                             }
                                         })}

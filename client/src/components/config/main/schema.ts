@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react";
+
 export interface EntityConfig {
     fields: Record<string, FieldConfig>;
     fetch: () => unknown;
@@ -27,5 +29,32 @@ export type stats = {
     description: string
 }
 
+export type filterOptions = {
+    filterBy: string,
+    filterParam: string
+}
+
+export interface FetchOptions {
+    itemsPerPage: number;
+    sortOptions?: SortOptions;
+    filterOptions?: FilterOptions[];
+}
+
+export interface ContextType {
+    state: FetchOptions
+    dispatch: Dispatch<SetStateAction<FetchOptions>>
+}
+
+export type SortOptions = {
+    sortBy: string;
+    sortOrder: string
+}
+
+export type FilterOptions = {
+    filterBy: string,
+    filterParam: string
+}
+
+
 type FieldType = 'text' | 'integer' | 'float' | 'datetime' | 'boolean' | 'keyValueArray'
-export type FunctionType = 'getTop' | 'getPercentage' | 'percentageBy' | 'getAmount' | 'getFilterBooleanAmount' | 'getDataSize' | 'getEarliestDate' | 'getNestedFieldWithMostByField' | 'getFieldWithMostByTopField' | 'getMostFrequentNestedArray'
+export type FunctionType = 'getTop' | 'getPercentage' | 'getAmount' | 'getFilterBooleanAmount' | 'getDataSize' | 'getEarliestDeadline' | 'getNestedFieldWithMostByField' | 'getFieldWithMostByTopField' | 'getMostFrequentNestedArray'

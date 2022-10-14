@@ -43,8 +43,9 @@ export default function Stats({ entityConfig }: StatsProps) {
         }
     }
 
-    const getEarliestDate = (dates: Array<string>) => {
-        return dates.sort(function (a, b) {
+    const getEarliestDateSinceNow = (dates: Array<string>) => {
+        const filteredDates = dates.filter(date => +new Date(date) > +Date.now())
+        return filteredDates.sort(function (a, b) {
             return +new Date(a) - +new Date(b)
         })[0];
     }
@@ -114,8 +115,8 @@ export default function Stats({ entityConfig }: StatsProps) {
             case 'getTop':
                 return getTop(args[0])
 
-            case 'getEarliestDate':
-                return getEarliestDate((getSet(args[0]) as unknown as string[]))
+            case 'getEarliestDeadline':
+                return getEarliestDateSinceNow((getSet(args[0]) as unknown as string[]))
 
             case 'getNestedFieldWithMostByField':
                 return getNestedFieldWithMostByField(args[0], args[1], args[2])

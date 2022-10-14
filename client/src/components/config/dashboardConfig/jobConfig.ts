@@ -169,7 +169,7 @@ const jobConfig: EntityConfig = {
             statsList: [
                 {
                     comparisonArgs: ['startDate'],
-                    comparisonType: 'getEarliestDate',
+                    comparisonType: 'getEarliestDeadline',
                     description: 'Closest deadline: '
                 },
                 {

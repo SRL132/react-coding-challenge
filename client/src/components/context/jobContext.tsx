@@ -1,6 +1,6 @@
 import React, { useReducer, createContext, FC, SetStateAction, Dispatch } from "react"
 import { FetchOptions } from "../../api/jobs-api"
-import { reducer, initialState } from "../reducers/jobReducer"
+import { reducer, initialState } from "../reducers/job/jobReducer"
 
 
 export interface JobContextType {

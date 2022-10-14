@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import JobDashboard from './components/job/JobDashboard';
+import JobDashboard from './components/dashboards/JobDashboard';
 import { ReactQueryDevtools } from "react-query/devtools"
 import { JobProvider } from './components/context/jobContext';
 
