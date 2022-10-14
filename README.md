@@ -1,6 +1,6 @@
 # The best Data App for busy people
 
-Are you a planner tired of seeing tons of data and willing to get to the point?\
+Are you a planner tired of seeing tons of superficial data and willing to get to the point?\
 Are you a developer looking for reusability? This application is easy to use:\
 To easily create a new dashboard with stats and filters all you have to do is the following:
 
