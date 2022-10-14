@@ -38,11 +38,8 @@ export const reactiveFetchJobs = async (page = 0, fetchOptions: FetchOptions = {
             if (option.filterParam) {
                 URL += `&${option.filterBy}${option.filterBy === 'q' ? '=' : '_like=^'}${option.filterParam}`
             }
-
         })
-
     }
-    console.log(URL)
 
     return fetch(`${URL}`
         , {

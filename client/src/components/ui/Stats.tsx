@@ -1,38 +1,39 @@
 import React from 'react'
 import { useQuery } from 'react-query'
 import { EntityConfig, FunctionType } from '../config/main/schema'
-
 type StatsProps = {
     entityConfig: EntityConfig
 }
 
+type ReduceType = {
+    amount?: number
+    key?: string
+}
+
 export default function Stats({ entityConfig }: StatsProps) {
     const { stats, normalQueryName } = entityConfig
-    const { data, status, isSuccess } = useQuery(normalQueryName, entityConfig.fetchAll)
+    const { data, status, isSuccess } = useQuery<unknown>(normalQueryName, entityConfig.fetchAll)
 
     const filterBoolean = (field: string, value: boolean) => {
-        //@ts-ignore
-        return data.filter((e) =>
+        return (data as Record<string, any>[]).filter((e) =>
             e[field] === value
         )
     }
 
     const getSet = (field: string) => {
-        const arr: Iterable<Array<string>> | null | undefined = []
-        //@ts-ignore
-        data.map(e => {
+        const arr: any[] = [];
+        (data as Record<string, any>[]).map(e => {
             if (e[field]) {
-                //@ts-ignore
                 arr.push(e[field])
             }
-        }
-        )
+        })
         return Array.from(new Set(arr))
     }
+
     const getMostFrequent = (arr: string[]) => {
         const filteredArray = arr.filter(e => e !== undefined)
         if (filteredArray.length > 0) {
-            const hashmap = filteredArray.reduce((acc, val) => {
+            const hashmap = filteredArray.reduce<ReduceType>((acc, val) => {
                 //@ts-ignore
                 (acc)[val] = (acc[val] || 0) + 1
                 return acc
@@ -53,17 +54,14 @@ export default function Stats({ entityConfig }: StatsProps) {
     const getTop = (targetField: string) => {
         let targetArray: string[] = [];
 
-        (data as unknown[]).map(e => {
-            //@ts-ignore
+        (data as Record<string, any>[]).map(e => {
             return targetArray.push(e[targetField])
         });
         return getMostFrequent(targetArray)
     }
 
-
     const getPercentage = (field: string, value: string) => {
-        const filteredData = (data as unknown[]).filter((e) => {
-            //@ts-ignore
+        const filteredData = (data as Record<string, any>[]).filter((e) => {
             return e[field] === value
         })
         return filteredData.length / (data as unknown[]).length * 100
@@ -71,24 +69,20 @@ export default function Stats({ entityConfig }: StatsProps) {
 
     const extractNestedFieldArray = (field: string) => {
         const array: any[] = [];
-        (data as unknown[]).map((el) => {
-            //@ts-ignore
-            el[field].forEach((subElement) => {
+        (data as Record<string, any>[]).map((el) => {
+            el[field].forEach((subElement: { name: any }) => {
                 return array.push((subElement.name))
             });
-
         })
         return array
     }
 
     const getNestedFieldWithMostByField = (mostField: string, byField: string, byValue: any) => {
         let resultArray: string[] = [];
-        (data as unknown[]).filter((e) => {
-            //@ts-ignore
+        (data as Record<string, any>[]).filter((e) => {
             return e[byField] === byValue
         }).map((filteredEl) => {
-            //@ts-ignore
-            filteredEl[mostField].forEach((element) => {
+            filteredEl[mostField].forEach((element: { name: string }) => {
                 return resultArray.push((element.name))
             });
 
@@ -100,13 +94,9 @@ export default function Stats({ entityConfig }: StatsProps) {
         const topValue = getTop(byField)
         let resultArray: string[] = [];
 
-        (data as unknown[]).filter((e) => {
-            //@ts-ignore
-
+        (data as Record<string, any>[]).filter((e) => {
             return e[byField] === topValue
         }).map(filteredEl => {
-            //@ts-ignore
-
             return filteredEl[getField] && resultArray.push(filteredEl[getField])
         });
         return getMostFrequent(resultArray)
@@ -127,8 +117,7 @@ export default function Stats({ entityConfig }: StatsProps) {
                 return getTop(args[0])
 
             case 'getEarliestDate':
-                //@ts-ignore
-                return getEarliestDate(getSet(args[0]))
+                return getEarliestDate((getSet(args[0]) as unknown as Date[]))
 
             case 'getNestedFieldWithMostByField':
                 return getNestedFieldWithMostByField(args[0], args[1], args[2])
@@ -159,15 +148,13 @@ export default function Stats({ entityConfig }: StatsProps) {
                     <ul className="list-group">
                         {statGroup.statsList.map(stat => {
                             return <li key={1} className="list-group-item">
-                                <span>{stat.description} </span>
+                                <span>{stat.description + ' '} </span>
                                 <strong>{
-                                    //@ts-ignore
-                                    renderResult(stat.comparisonType, stat.comparisonArgs)
+                                    renderResult(stat.comparisonType, stat.comparisonArgs)?.toString()
                                 }
                                 </strong>
                             </li>
                         })}
-
                     </ul>
                 </div>
             })}

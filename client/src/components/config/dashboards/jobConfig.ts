@@ -45,7 +45,6 @@ const jobConfig: EntityConfig = {
             label: 'Original ID',
             unique: true
         },
-
         talentId: {
             name: 'talentId',
             type: 'text',
@@ -186,12 +185,12 @@ const jobConfig: EntityConfig = {
                 {
                     comparisonArgs: ["talentGrade", ""],
                     comparisonType: 'getPercentage',
-                    description: 'Percentage of talent grades to be defined: '
+                    description: 'Percentage of talent grades to be defined:'
                 },
             ]
         },
         {
-            title: 'DidYouKnow',
+            title: 'Did you know?',
             divClass: 'bg-secondary rounded',
             statsList: [
                 {
@@ -216,7 +215,6 @@ const jobConfig: EntityConfig = {
                 }
             ]
         }
-
     ],
     fetch: reactiveFetchJobs,
     fetchAll: fetchAllJobs,
