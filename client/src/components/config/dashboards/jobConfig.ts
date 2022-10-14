@@ -137,6 +137,87 @@ const jobConfig: EntityConfig = {
             label: 'Unassigned'
         },
     },
+    stats: [
+        {
+            title: 'Data Insights',
+            divClass: 'bg-secondary rounded',
+            statsList: [
+                {
+                    comparisonArgs: [],
+                    comparisonType: 'getDataSize',
+                    description: 'Data size: '
+                },
+                {
+                    comparisonArgs: ['officeCity'],
+                    comparisonType: 'getAmount',
+                    description: 'Number of cities:'
+                },
+                {
+                    comparisonArgs: ['isUnassigned', true],
+                    comparisonType: 'getFilterBooleanAmount',
+                    description: 'Unassigned jobs:'
+                },
+                {
+                    comparisonArgs: ['industry'],
+                    comparisonType: 'getAmount',
+                    description: 'Number of industries:'
+                },
+            ]
+        },
+        {
+            title: 'Top Priority',
+            divClass: 'bg-warning rounded',
+            statsList: [
+                {
+                    comparisonArgs: ['startDate'],
+                    comparisonType: 'getEarliestDate',
+                    description: 'Closest deadline: '
+                },
+                {
+                    comparisonArgs: ['requiredSkills', 'bookingGrade', 'Senior Manager'],
+                    comparisonType: 'getNestedFieldWithMostByField',
+                    description: 'Most in-demand skills for senior managers:'
+                },
+                {
+                    comparisonArgs: ['officeCity', 'clientId'],
+                    comparisonType: 'getFieldWithMostByTopField',
+                    description: 'Office city with the most jobs from the top client:'
+                },
+                {
+                    comparisonArgs: ["talentGrade", ""],
+                    comparisonType: 'getPercentage',
+                    description: 'Percentage of talent grades to be defined: '
+                },
+            ]
+        },
+        {
+            title: 'DidYouKnow',
+            divClass: 'bg-secondary rounded',
+            statsList: [
+                {
+                    comparisonArgs: ['requiredSkills'],
+                    comparisonType: 'getMostFrequentNestedArray',
+                    description: 'Most required skill:'
+                },
+                {
+                    comparisonArgs: ['optionalSkills'],
+                    comparisonType: 'getMostFrequentNestedArray',
+                    description: 'Most frequent optional skill:'
+                },
+                {
+                    comparisonArgs: ['jobManagerId'],
+                    comparisonType: 'getTop',
+                    description: 'Job Manager with the most positions:'
+                },
+                {
+                    comparisonArgs: ['industry', "Low technology"],
+                    comparisonType: 'getPercentage',
+                    description: 'Percentage of jobs in Low Tech:'
+                }
+            ]
+        }
+
+    ],
     fetch: reactiveFetchJobs,
     fetchAll: fetchAllJobs,
     infiniteQueryName: 'infiniteJobData',

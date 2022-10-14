@@ -4,6 +4,7 @@ export interface EntityConfig {
     fetchAll: () => unknown;
     infiniteQueryName: string;
     normalQueryName: string;
+    stats?: StatConfig[];
 }
 
 export interface FieldConfig {
@@ -12,15 +13,19 @@ export interface FieldConfig {
     type: FieldType;
     unique?: boolean;
     searcheable?: boolean;
-    stats?: stats;
+}
+
+export interface StatConfig {
+    title: string;
+    statsList: stats[];
+    divClass: string;
 }
 
 export type stats = {
-    type: StatType;
     comparisonArgs: any[];
     comparisonType: FunctionType
+    description: string
 }
 
 type FieldType = 'text' | 'integer' | 'float' | 'datetime' | 'boolean' | 'keyValueArray'
-type StatType = 'didYouKnow' | 'dataInsights' | 'topPriority'
-type FunctionType = 'mostBy' | 'percentageBy' | 'getAmount'
+export type FunctionType = 'getTop' | 'getPercentage' | 'percentageBy' | 'getAmount' | 'getFilterBooleanAmount' | 'getDataSize' | 'getEarliestDate' | 'getNestedFieldWithMostByField' | 'getFieldWithMostByTopField' | 'getMostFrequentNestedArray'

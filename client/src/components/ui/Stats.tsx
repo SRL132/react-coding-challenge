@@ -1,15 +1,14 @@
 import React from 'react'
 import { useQuery } from 'react-query'
-import { EntityConfig } from '../config/main/schema'
+import { EntityConfig, FunctionType } from '../config/main/schema'
 
 type StatsProps = {
     entityConfig: EntityConfig
 }
 
 export default function Stats({ entityConfig }: StatsProps) {
-    const { fields, normalQueryName } = entityConfig
+    const { stats, normalQueryName } = entityConfig
     const { data, status, isSuccess } = useQuery(normalQueryName, entityConfig.fetchAll)
-    //@ts-ignore
 
     const filterBoolean = (field: string, value: boolean) => {
         //@ts-ignore
@@ -113,83 +112,65 @@ export default function Stats({ entityConfig }: StatsProps) {
         return getMostFrequent(resultArray)
     }
 
+    const renderResult = (comparisonType: FunctionType, args: any[] = ['']) => {
+        switch (comparisonType) {
+            case 'getDataSize':
+                return (data as unknown[]).length
+
+            case 'getAmount':
+                return getSet(args[0]).length
+
+            case 'getFilterBooleanAmount':
+                return filterBoolean(args[0], args[1]).length
+
+            case 'getTop':
+                return getTop(args[0])
+
+            case 'getEarliestDate':
+                //@ts-ignore
+                return getEarliestDate(getSet(args[0]))
+
+            case 'getNestedFieldWithMostByField':
+                return getNestedFieldWithMostByField(args[0], args[1], args[2])
+
+            case 'getFieldWithMostByTopField':
+                return getFieldWithMostByTopField(args[0], args[1])
+
+            case 'getPercentage':
+                return getPercentage(args[0], args[1]) + '%'
+
+            case 'getMostFrequentNestedArray':
+                return getMostFrequent(extractNestedFieldArray(args[0]))
+
+            default:
+                return comparisonType
+        }
+    }
+
     if (status === 'loading') return <h6>{'Loading stats...'}</h6>
     if (status === 'error') return <h6>{'Error loading stats'}</h6>
     return (
         <div className="d-flex justify-content-between p-5">
-            <div className='bg-secondary rounded'>
-                <h5>
-                    {'Data insights:'}
-                </h5>
+            {isSuccess && stats?.map(statGroup => {
+                return <div className={statGroup.divClass}>
+                    <h5>
+                        {statGroup.title}
+                    </h5>
+                    <ul className="list-group">
+                        {statGroup.statsList.map(stat => {
+                            return <li key={1} className="list-group-item">
+                                <span>{stat.description} </span>
+                                <strong>{
+                                    //@ts-ignore
+                                    renderResult(stat.comparisonType, stat.comparisonArgs)
+                                }
+                                </strong>
+                            </li>
+                        })}
 
-                <ul className="list-group">
-                    <li key={1} className="list-group-item">
-                        <span>{'Data size: '} </span>
-                        <strong>{isSuccess && (data as unknown[]).length} </strong>
-                    </li>
-                    <li key={2} className="list-group-item">
-                        <span >{'Number of cities: '} </span>
-                        <strong>{getSet('officeCity').length}</strong>
-                    </li>
-                    <li key={3} className="list-group-item">
-                        <span>{'Unassigned jobs: '} </span>
-                        <strong>{filterBoolean('isUnassigned', true).length}</strong>
-                    </li>
-                    <li key={4} className="list-group-item">
-                        <span>{'Number of industries: '} </span>
-                        <strong>{getSet('industry').length}</strong>
-                    </li>
-                </ul>
-            </div>
-            <div className='bg-warning rounded'>
-                <h5>
-                    {'Top Priority:'}
-                </h5>
-
-                <ul className="list-group">
-                    <li key={1} className="list-group-item">
-                        <span>{'Closest deadline: '} </span>
-                        {/*@ts-ignore*/}
-                        <strong>{getEarliestDate(getSet('startDate'))} </strong>
-                    </li>
-                    <li key={2} className="list-group-item">
-                        <span >{'Most in-demand skills for senior managers: '} </span>
-                        <strong>{getNestedFieldWithMostByField('requiredSkills', 'bookingGrade', 'Senior Manager')}</strong>
-                    </li>
-                    <li key={3} className="list-group-item">
-                        <span>{'Office city with the most jobs from the top client: '} </span>
-                        <strong>{getFieldWithMostByTopField('officeCity', 'clientId')}</strong>
-                    </li>
-                    <li key={4} className="list-group-item">
-                        <span>{'Percentage of talent grades to be defined: '} </span>
-                        <strong>{isSuccess && getPercentage("talentGrade", "") + '%'}</strong>
-                    </li>
-                </ul>
-            </div>
-            <div className='bg-secondary rounded'>
-                <h5>
-                    {'Did you know?'}
-                </h5>
-
-                <ul className="list-group">
-                    <li key={1} className="list-group-item">
-                        <span>{'Most required skill: '} </span>
-                        <strong>{getMostFrequent(extractNestedFieldArray('requiredSkills'))} </strong>
-                    </li>
-                    <li key={2} className="list-group-item">
-                        <span >{'Most frequent optional skill: '} </span>
-                        <strong>{getMostFrequent(extractNestedFieldArray('optionalSkills'))}</strong>
-                    </li>
-                    <li key={3} className="list-group-item">
-                        <span>{'Job Manager with the most positions: '} </span>
-                        <strong>{getTop('jobManagerId')}</strong>
-                    </li>
-                    <li key={4} className="list-group-item">
-                        <span>{'Percentage of jobs in Low Tech: '} </span>
-                        <strong>{isSuccess && getPercentage("industry", "Low technology") + '%'}</strong>
-                    </li>
-                </ul>
-            </div>
+                    </ul>
+                </div>
+            })}
         </div>
     )
 }
