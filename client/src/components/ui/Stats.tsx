@@ -43,11 +43,9 @@ export default function Stats({ entityConfig }: StatsProps) {
         }
     }
 
-    const getEarliestDate = (dates: Array<Date>) => {
-        //@ts-ignore
+    const getEarliestDate = (dates: Array<string>) => {
         return dates.sort(function (a, b) {
-            //@ts-ignore
-            return Date.parse(a) > Date.parse(b);
+            return +new Date(a) - +new Date(b)
         })[0];
     }
 
@@ -117,7 +115,7 @@ export default function Stats({ entityConfig }: StatsProps) {
                 return getTop(args[0])
 
             case 'getEarliestDate':
-                return getEarliestDate((getSet(args[0]) as unknown as Date[]))
+                return getEarliestDate((getSet(args[0]) as unknown as string[]))
 
             case 'getNestedFieldWithMostByField':
                 return getNestedFieldWithMostByField(args[0], args[1], args[2])

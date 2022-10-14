@@ -20,14 +20,8 @@ To easily create a new dashboard with stats and filters all you have to do is th
 - TypeScript
 - React
 
-## Submission
+## What's left
 
-- Please fork the project, commit and push your implementation and add
-  `sundara.amancharla@aspaara.com` as a contributor.
-- Please update the README with any additional details or steps that are
-  requried to run your implementation.
-- We understand that there is a limited amount of time, so it does not have to
-  be perfect or 100% finished. Plan to spend no more than 2-3 hours on it.
-
-For any additional questions on the task please feel free to email
-`sundara.amancharla@aspaara.com`.
+- Custom sorting for dates depending on their type as well as datepicker filters
+- Additional refactoring
+- Other stats/ways to show key insights
